@@ -1,0 +1,46 @@
+{
+  "model": "AK-VMD + Quantile LightGBM",
+  "paper": "Adaptive-K VMD with Quantile LightGBM",
+  "dataset": { "site": "Kraljevo, Serbia", "records": 8274, "test_records": 1655, "daytime_test_hours": 820 },
+  "metrics": {
+    "r2_all_hours": 0.9901,
+    "r2_daytime": 0.9815,
+    "mae_kw": 23.95,
+    "rmse_kw": 36.3,
+    "mape_pct": 15.04,
+    "picp_90_pct": 80.7,
+    "classification_acc_pct": 96.71
+  },
+  "adaptive_k": {
+    "selected_k": 6,
+    "literature_default_k": 3,
+    "literature_studies_reviewed": 47,
+    "literature_using_fixed_k3_pct": 100
+  },
+  "vmd_sensitivity": [
+    { "k": "K=2", "r2_daytime": 0.6138, "mae_kw": 81.28, "mape_pct": 107.70 },
+    { "k": "K=3 (prior work)", "r2_daytime": 0.2870, "mae_kw": 105.69, "mape_pct": 86.19 },
+    { "k": "K=4", "r2_daytime": -2.043, "mae_kw": 195.52, "mape_pct": 226.25 },
+    { "k": "K=5", "r2_daytime": 0.6341, "mae_kw": 77.56, "mape_pct": 98.47 },
+    { "k": "K=6 (proposed)", "r2_daytime": 0.9806, "mae_kw": 24.42, "mape_pct": 14.57 }
+  ],
+  "baseline_comparison": [
+    { "name": "Persistence (24h lag)", "r2_daytime": 0.5491, "mae_kw": 118.03, "rmse_kw": 179.37 },
+    { "name": "Ridge Regression", "r2_daytime": 0.7338, "mae_kw": 103.34, "rmse_kw": 137.83 },
+    { "name": "Random Forest (200 trees)", "r2_daytime": 0.8570, "mae_kw": 71.43, "rmse_kw": 101.02 },
+    { "name": "Gradient Boosting (300 trees)", "r2_daytime": 0.8527, "mae_kw": 78.49, "rmse_kw": 102.53 },
+    { "name": "No VMD (ablate C1)", "r2_daytime": 0.9838, "mae_kw": 22.97, "rmse_kw": 33.98 },
+    { "name": "Proposed AK-VMD+QLightGBM", "r2_daytime": 0.9806, "mae_kw": 24.42, "rmse_kw": 37.23 }
+  ],
+  "ev_charging_signal": {
+    "tiers": [
+      { "name": "Full Solar Charge", "condition": "q50 > 100kW and rho < 0.4", "share_pct": 10.0, "hours": 82 },
+      { "name": "Limited Charge", "condition": "q50 > 50kW and 0.4<=rho<1", "share_pct": 66.2, "hours": 543 },
+      { "name": "No Solar Charge", "condition": "otherwise", "share_pct": 23.8, "hours": 195 }
+    ],
+    "false_negatives_hours": 13,
+    "unutilized_solar_kwh": 4497,
+    "estimated_extra_cost_inr": 38.23
+  },
+  "cross_site_generalization": { "r2": 0.9963, "mae_kw": 3.01, "picp_90_pct": 83.6 }
+}

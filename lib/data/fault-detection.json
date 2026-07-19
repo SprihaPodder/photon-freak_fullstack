@@ -1,0 +1,35 @@
+{
+  "model": "SolarGuard-Net",
+  "backbone": "EfficientNetV2-S + CBAM + FPN",
+  "dataset": { "total_images": 2500, "per_class": 500, "test_images": 375, "raw_images_before_balancing": 746 },
+  "formula": "F = FPN(CBAM(f1), CBAM(f3), CBAM(f4)); yhat = MLP(LayerNorm(F))",
+  "single_run_seed0": {
+    "overall_accuracy_pct": 96.0,
+    "per_class": [
+      { "class": "Bird-drop", "precision": 100.0, "recall": 90.7, "f1": 95.1, "support": 75 },
+      { "class": "Clean", "precision": 90.2, "recall": 98.7, "f1": 94.3, "support": 75 },
+      { "class": "Dusty", "precision": 95.9, "recall": 94.7, "f1": 95.3, "support": 75 },
+      { "class": "Electrical-damage", "precision": 100.0, "recall": 98.7, "f1": 99.3, "support": 75 },
+      { "class": "Physical-Damage", "precision": 94.8, "recall": 97.3, "f1": 96.1, "support": 75 }
+    ]
+  },
+  "five_seed_robustness": {
+    "test_accuracy_pct": { "mean": 96.27, "std": 0.50 },
+    "weighted_f1_pct": { "mean": 96.28, "std": 0.51 },
+    "weighted_precision_pct": { "mean": 96.44, "std": 0.49 },
+    "weighted_recall_pct": { "mean": 96.27, "std": 0.50 },
+    "f1_bird_drop_pct": { "mean": 95.27, "std": 1.16 },
+    "f1_clean_pct": { "mean": 94.77, "std": 1.08 },
+    "f1_dusty_pct": { "mean": 95.44, "std": 0.95 },
+    "f1_electrical_damage_pct": { "mean": 99.33, "std": 0.47 },
+    "f1_physical_damage_pct": { "mean": 96.58, "std": 0.84 }
+  },
+  "baseline_comparison": [
+    { "model": "EfficientNetB0", "accuracy_pct": 95.86, "f1_pct": 95.87 },
+    { "model": "SolarGuard-Net", "accuracy_pct": 95.86, "f1_pct": 95.86 },
+    { "model": "ResNet-50", "accuracy_pct": 95.58, "f1_pct": 95.59 },
+    { "model": "InceptionV3", "accuracy_pct": 95.58, "f1_pct": 95.59 },
+    { "model": "VGG16", "accuracy_pct": 92.27, "f1_pct": 92.25 }
+  ],
+  "gradcam": "Consistently highlights soiling regions for Dusty/Bird-drop, visible defects for Physical-Damage; Electrical-damage localization accurate in one sample but more diffuse in others."
+}

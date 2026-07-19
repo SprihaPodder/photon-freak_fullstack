@@ -1,0 +1,6 @@
+{
+  "model": "CNN-LSTM-Transformer",
+  "paper": "Battery-Health-Aware, Fault-Aware AI Framework",
+  "metrics": { "r2": 0.966, "mae_kw": 0.132, "rmse_kw": 0.228 },
+  "description": "Hybrid CNN-LSTM-Transformer generates point forecasts with uncertainty estimates for downstream battery and charging modules."
+}

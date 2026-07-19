@@ -1,0 +1,29 @@
+{
+  "optimizer": "Multi-objective PSO-GA",
+  "parameters": {
+    "horizon": "75 h (300 x 15-min steps)",
+    "battery_capacity_kwh": 40,
+    "max_charging_power_kw": 2.5,
+    "initial_soc_pct": 20,
+    "target_soc_pct": 80,
+    "c_rate_range": "0.5C - 1.0C",
+    "temperature_limit_c": "15 - 35",
+    "grid_price_range_inr_per_kwh": "0.14 - 20.24",
+    "pso_swarm": 50,
+    "ga_population": 50
+  },
+  "vs_baseline_uniform": [
+    { "metric": "Total cost (INR)", "baseline": "Proportional", "optimized": 131.54, "improvement": "-20%" },
+    { "metric": "Active charging intervals", "baseline": "All 300", "optimized": "156 (52%)", "improvement": "-48% idle avoided" },
+    { "metric": "Non-charging windows", "baseline": "0%", "optimized": "46%", "improvement": "Flexible scheduling" },
+    { "metric": "SoC gain over 75h", "baseline": "Linear", "optimized": "20% -> 44.3%", "improvement": "Adaptive trajectory" },
+    { "metric": "Price-sensitivity ratio", "baseline": "1.0x", "optimized": "1835x", "improvement": "High price avoidance" },
+    { "metric": "Solar-coincident charging", "baseline": "Random", "optimized": "34.1% of energy", "improvement": "Renewable-biased" }
+  ],
+  "soh_derating": {
+    "formula": "P_max(SoH) = P_max / g(SoH)",
+    "healthy_ge_90_pct_g": 1,
+    "soh_80_pct_g": 2,
+    "soh_70_pct_g": 3
+  }
+}

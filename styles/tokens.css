@@ -1,0 +1,43 @@
+:root {
+  --bg-void: #05070c;
+  --bg-panel: rgba(13, 19, 30, 0.52);
+  --bg-panel-solid: #0b111c;
+  --border-glass: rgba(140, 170, 255, 0.14);
+  --border-hi: rgba(140, 190, 255, 0.32);
+
+  --accent-cyan: #4fd8ff;
+  --accent-violet: #8b7cff;
+  --accent-amber: #ffb454;
+  --accent-mint: #5cf2c0;
+
+  --text-primary: #e9effb;
+  --text-muted: #8592ac;
+
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-glass: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+::selection {
+  background: rgba(79, 216, 255, 0.25);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(140, 170, 255, 0.2);
+  border-radius: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

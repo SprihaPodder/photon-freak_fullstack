@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+.env*.local
+*.log
+.DS_Store
+venv/
+.env
+.env.*
+**/.env
+**/.env.*
+QUICK_REFERENCE.md
+SETUP_COMPLETE.md
+SETUP_GUIDE.md

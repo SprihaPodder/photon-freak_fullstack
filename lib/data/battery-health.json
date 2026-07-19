@@ -1,0 +1,49 @@
+{
+  "model": "DVG-BiLSTM",
+  "dataset": "NASA PCoE (4 lithium-ion 18650 batteries, 228 test sequences)",
+  "metrics": {
+    "soh_rmse_pct": 1.349,
+    "soh_mae_pct": 0.887,
+    "soh_r2": 0.9916,
+    "health_state_macro_f1": 0.96,
+    "health_state_accuracy": 0.97,
+    "second_life_precision": 0.97,
+    "second_life_recall": 0.98,
+    "second_life_f1": 0.97,
+    "rue_r2": 0.9858,
+    "mc_dropout_ci_coverage_pct": 97.4,
+    "mc_dropout_passes": 150
+  },
+  "degradation_trajectory": {
+    "start_soh_pct": 99,
+    "end_soh_pct": 38,
+    "cycles": 250,
+    "eol_threshold_pct": 70,
+    "eol_crossed_at_cycle": 120
+  },
+  "confusion_matrix": {
+    "labels": ["Healthy", "Degraded", "Critical"],
+    "matrix": [
+      [36, 3, 0],
+      [2, 120, 1],
+      [0, 1, 45]
+    ]
+  },
+  "soh_sweep": [
+    { "soh_pct": 100, "g_soh": 1.0, "total_cost_inr": 195.15, "peak_c_rate": 0.0621, "active_charging_pct": 28.6, "final_soc_pct": 100.0, "solar_used_kwh": 18.45 },
+    { "soh_pct": 90, "g_soh": 1.0, "total_cost_inr": 195.15, "peak_c_rate": 0.0621, "active_charging_pct": 28.6, "final_soc_pct": 100.0, "solar_used_kwh": 18.45 },
+    { "soh_pct": 80, "g_soh": 2.0, "total_cost_inr": 195.74, "peak_c_rate": 0.0310, "active_charging_pct": 61.1, "final_soc_pct": 100.0, "solar_used_kwh": 16.36 },
+    { "soh_pct": 70, "g_soh": 3.0, "total_cost_inr": 162.52, "peak_c_rate": 0.0207, "active_charging_pct": 80.7, "final_soc_pct": 82.63, "solar_used_kwh": 12.14 }
+  ],
+  "training": {
+    "loss": "L = L_MSE + 0.08*L_mono + lambda_CBCR*(L_pull+L_push) + 0.1*L_RUL + 0.1*L_RUE",
+    "lambda_cbcr": 0.01,
+    "margin": 0.10,
+    "epochs_max": 400,
+    "batch_size": 32,
+    "optimizer": "AdamW",
+    "weight_decay": 0.00005,
+    "lr_schedule": "cosine-decay-with-restarts",
+    "initial_lr": 0.0008
+  }
+}
