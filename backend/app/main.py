@@ -1,5 +1,12 @@
 import io
 import os
+
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
+os.environ["NUMEXPR_NUM_THREADS"] = "1"
+
 import logging
 import pandas as pd
 from datetime import datetime as dt
@@ -68,39 +75,56 @@ class ChargingRequest(BaseModel):
     grid_price_inr: list[float] = [6.5]*24
     quality: str = "quick"
 
-
 @app.on_event("startup")
 def startup_event():
     """Initialize all backends on startup"""
-    logger.info("Initializing PhotonFreak API backends...")
+    logger.info("========== STARTUP BEGIN ==========")
 
     # Solar forecasting
     try:
+        logger.info("[1] Before solar_db.init_db()")
         solar_db.init_db()
+        logger.info("[2] After solar_db.init_db()")
+
+        logger.info("[3] Before solar_model_service.load_models()")
         solar_model_service.load_models()
+        logger.info("[4] After solar_model_service.load_models()")
+
         logger.info("✓ Solar forecasting backend loaded")
     except Exception as e:
-        logger.warning(f"Solar forecasting backend initialization failed: {e}")
+        logger.exception("Solar forecasting backend initialization failed")
 
-    # Battery health (optional)
+    # Battery health
     global battery_bundle
     if BATTERY_AVAILABLE:
         try:
+            logger.info("[5] Before BatteryModelBundle()")
             battery_bundle = BatteryModelBundle()
-            logger.info("✓ Battery health backend loaded. RUL reference range (NASA batteries): %s cycles",
-                        battery_bundle.rul_reference_range)
-        except Exception as e:
-            logger.warning(f"Battery health backend initialization failed: {e}")
-    else:
-        logger.info("Battery health module not available (TensorFlow not installed for Python 3.14)")
+            logger.info("[6] After BatteryModelBundle()")
 
-    # GROQ key check — shared by battery /explain and solar's own explanation service
+            logger.info(
+                "✓ Battery health backend loaded. RUL reference range (NASA batteries): %s cycles",
+                battery_bundle.rul_reference_range,
+            )
+
+        except Exception:
+            logger.exception("Battery health backend initialization failed")
+    else:
+        logger.info("Battery health module not available")
+
+    logger.info("[7] Checking GROQ key")
+
     groq_key = os.environ.get("GROQ_API_KEY")
     if groq_key:
-        logger.info("GROQ_API_KEY found at startup (length=%d, starts with '%s...').", len(groq_key), groq_key[:4])
+        logger.info(
+            "GROQ_API_KEY found (length=%d, starts with '%s...')",
+            len(groq_key),
+            groq_key[:4],
+        )
     else:
-        logger.warning("GROQ_API_KEY NOT found at startup — /api/battery/explain will fail until this is set. "
-                        "Checked working directory: %s", os.getcwd())
+        logger.warning("GROQ_API_KEY not found")
+
+    logger.info("========== STARTUP COMPLETE ==========")
 
 
 @app.get("/api/health")

@@ -16,7 +16,7 @@ def load_models():
     if _models is None:
         with open(MODEL_PATH, "rb") as f:
             payload = pickle.load(f)
-        _models = payload["models"]  # {"q05": ..., "q50": ..., "q95": ...}
+        _models = payload["models"]
     return _models
 
 

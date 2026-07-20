@@ -4,10 +4,20 @@ Adjust these values to match your deployment.
 """
 import os
 
-# --- Paths -------------------------------------------------------------
-BASE_DIR    = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DB_PATH     = os.path.join(BASE_DIR, "solar_forecast.db")
-MODEL_PATH  = os.path.join(BASE_DIR, "models.pkl")   # copy your models.pkl next to this file
+# # --- Paths -------------------------------------------------------------
+# BASE_DIR    = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# DB_PATH     = os.path.join(BASE_DIR, "solar_forecast.db")
+# MODEL_PATH  = os.path.join(BASE_DIR, "models.pkl")   # copy your models.pkl next to this file
+from pathlib import Path
+
+# backend/app
+APP_DIR = Path(__file__).resolve().parent.parent
+
+# backend
+BACKEND_DIR = APP_DIR.parent
+
+DB_PATH = APP_DIR / "solar_forecast.db"
+MODEL_PATH = BACKEND_DIR / "models.pkl"
 
 # --- Feature engineering (must match training script exactly) ----------
 LAGS  = [1, 2, 3, 6, 12, 24, 48]   # hours
