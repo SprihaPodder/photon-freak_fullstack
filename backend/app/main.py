@@ -54,7 +54,7 @@ app.add_middleware(
 )
 
 # Global instances
-predictor = Predictor()
+predictor = None
 
 
 class ChargingRequest(BaseModel):
@@ -108,7 +108,7 @@ def health():
     """Health check endpoint"""
     return {
         "ok": True,
-        "fault_model_ready": predictor.ready,
+        "fault_model_ready": predictor is not None,
         "solar_models_ready": True,
         "battery_model_ready": battery_bundle is not None if BATTERY_AVAILABLE else False,
         "battery_module_available": BATTERY_AVAILABLE,
@@ -123,15 +123,26 @@ def health():
 @app.post("/api/faults/predict")
 async def predict(image: UploadFile = File(...)):
     """Predict solar panel faults from an image"""
+    global predictor
+
+    # Lazy-load the model only on the first request
+    if predictor is None:
+        logger.info("Loading SolarGuard model...")
+        predictor = Predictor()
+        logger.info("SolarGuard model loaded.")
+
     if image.content_type not in {"image/jpeg", "image/png", "image/webp"}:
         raise HTTPException(415, "Upload a JPG, PNG, or WebP panel photo.")
+
     try:
-        return predictor.predict(Image.open(io.BytesIO(await image.read())))
+        image_obj = Image.open(io.BytesIO(await image.read()))
+        return predictor.predict(image_obj)
+
     except UnidentifiedImageError:
         raise HTTPException(400, "The uploaded file is not a valid image.")
+
     except RuntimeError as e:
         raise HTTPException(503, str(e))
-
 
 # ─────────────────────────────────────────────────────────────────────────────
 # CHARGING OPTIMIZATION

@@ -58,13 +58,24 @@ class SolarGuardNet(nn.Module):
 
 class Predictor:
     def __init__(self):
-        value = os.getenv("SOLARGUARD_CHECKPOINT", "")
-        self.paths = [Path(p.strip()).expanduser() for p in value.split(",") if p.strip()]
-        self.models = []
-        for path in self.paths:
-            if not path.is_file(): raise RuntimeError(f"Checkpoint not found: {path}")
-            model = SolarGuardNet(); model.load_state_dict(torch.load(path, map_location="cpu", weights_only=True)); model.eval()
-            self.models.append(model)
+        checkpoint = os.getenv("SOLARGUARD_CHECKPOINT")
+
+        if checkpoint:
+            path = Path(checkpoint).expanduser()
+        else:
+            path = SOLARGUARD_CHECKPOINT
+
+        if not path.is_file():
+            raise RuntimeError(f"Checkpoint not found: {path}")
+
+        model = SolarGuardNet()
+        model.load_state_dict(
+            torch.load(path, map_location="cpu", weights_only=True)
+        )
+        model.eval()
+
+        self.models = [model]
+        
     @property
     def ready(self): return bool(self.models)
     @torch.inference_mode()
