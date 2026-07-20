@@ -6,6 +6,11 @@ import timm
 from PIL import Image
 from torchvision import transforms as T
 
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+SOLARGUARD_CHECKPOINT = BASE_DIR / "solarguard_swa_seed0.pth"
+
 CLASSES = ["Bird-drop", "Clean", "Dusty", "Electrical-damage", "Physical-Damage"]
 TRANSFORM = T.Compose([T.Resize((256, 256)), T.CenterCrop(224), T.ToTensor(),
                        T.Normalize([0.485, .456, .406], [.229, .224, .225])])
