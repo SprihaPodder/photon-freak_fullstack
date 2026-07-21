@@ -306,7 +306,7 @@ export default function BatteryHealthGrid({ apiBaseUrl = "http://localhost:8000"
               className="rounded-[10px] px-3 py-2.5 text-[12px]"
               style={{ background: "rgba(255,107,107,0.1)", border: "1px solid rgba(255,107,107,0.4)", color: "#ff9a9a" }}
             >
-              <strong>⚠ Outside trained range.</strong> One or more of this battery's readings fall outside
+              <strong>⚠ Outside trained range.</strong> One or more of the readings of this battery fall outside
               anything the model saw during training (only 7 batteries total). This prediction is an
               extrapolation — treat it with reduced confidence. See details below.
             </div>

@@ -169,7 +169,7 @@ export default function LiveForecastGrid() {
             className="mb-5 rounded-xl px-4 py-3 text-[12px]"
             style={{ background: "rgba(255,180,84,0.08)", border: "1px solid rgba(255,180,84,0.25)", color: COLORS.amber }}
           >
-            Round just started — the model hasn't built up real recent history yet, so the first few
+            Round just started — the model has not built up real recent history yet, so the first few
             predictions are less accurate than usual. This improves automatically as you submit more
             readings in sequence.
           </div>
