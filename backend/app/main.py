@@ -7,6 +7,8 @@ os.environ["OPENBLAS_NUM_THREADS"] = "1"
 os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
 os.environ["NUMEXPR_NUM_THREADS"] = "1"
 
+print("OMP =", os.environ.get("OMP_NUM_THREADS"), flush=True)
+
 import logging
 import pandas as pd
 from datetime import datetime as dt

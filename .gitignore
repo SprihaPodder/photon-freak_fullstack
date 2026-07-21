@@ -5,10 +5,15 @@ out
 *.log
 .DS_Store
 venv/
+.venv/
 .env
 .env.*
 **/.env
 **/.env.*
+env/
+__pycache__/
+*.pyc
 QUICK_REFERENCE.md
 SETUP_COMPLETE.md
 SETUP_GUIDE.md
+
