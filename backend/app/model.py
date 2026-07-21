@@ -69,12 +69,20 @@ class Predictor:
             raise RuntimeError(f"Checkpoint not found: {path}")
 
         model = SolarGuardNet()
-        state_dict = torch.load(path, map_location="cpu", weights_only=True)
+        checkpoint = torch.load(path, map_location="cpu", weights_only=True)
 
-        # Remove the SWA counter
+        if isinstance(checkpoint, dict):
+            if "state_dict" in checkpoint:
+                state_dict = checkpoint["state_dict"]
+            elif "model_state_dict" in checkpoint:
+                state_dict = checkpoint["model_state_dict"]
+            else:
+                state_dict = checkpoint
+        else:
+            state_dict = checkpoint
+
         state_dict.pop("n_averaged", None)
 
-        # Remove DataParallel / DDP prefix
         state_dict = {
             k.replace("module.", "", 1): v
             for k, v in state_dict.items()
