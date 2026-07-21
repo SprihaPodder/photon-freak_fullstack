@@ -39,7 +39,7 @@ function ChartTooltip({ active, payload, label }: any) {
  * amber band for the q05-q95 range, solid line for the q50 forecast.
  */
 export default function ForecastIntervalChart({ data }: ForecastIntervalChartProps) {
-  const allValues = data.flatMap((d) => [d.q05, d.q50, d.q95]);
+  const allValues = data.flatMap((d) => [d.q025, d.q50, d.q975]);
   const maxVal = Math.max(...allValues, 1);
   const minVal = Math.min(...allValues, 0);
   const pad = (maxVal - minVal) * 0.15 || 10;
@@ -71,7 +71,7 @@ export default function ForecastIntervalChart({ data }: ForecastIntervalChartPro
         />
         <Area
           dataKey="range"
-          name="q05–q95 interval"
+          name="q025–q975 interval"
           stroke={COLORS.amber}
           strokeOpacity={0.4}
           strokeWidth={1}
