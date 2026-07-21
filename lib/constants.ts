@@ -13,6 +13,8 @@ export const COLORS = {
   mint: "#5cf2c0",
   text: "#e9effb",
   muted: "#8592ac",
+  yellow: "#facc15",
+  red: "#ef4444"
 } as const;
 
 export const SECTIONS = [
