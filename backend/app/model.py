@@ -95,11 +95,41 @@ class Predictor:
         
     @property
     def ready(self): return bool(self.models)
+    # @torch.inference_mode()
+    # def predict(self, image: Image.Image):
+    #     if not self.ready: raise RuntimeError("SOLARGUARD_CHECKPOINT is not configured")
+    #     x = TRANSFORM(image.convert("RGB")).unsqueeze(0)
+    #     probabilities = torch.stack([torch.softmax(model(x), 1)[0] for model in self.models]).mean(0)
+    #     index = int(probabilities.argmax())
+    #     return {"label": CLASSES[index], "confidence": round(float(probabilities[index]) * 100, 2),
+    #             "probabilities": [{"label": name, "probability": round(float(probabilities[i]) * 100, 2)} for i, name in enumerate(CLASSES)]}
     @torch.inference_mode()
     def predict(self, image: Image.Image):
-        if not self.ready: raise RuntimeError("SOLARGUARD_CHECKPOINT is not configured")
         x = TRANSFORM(image.convert("RGB")).unsqueeze(0)
-        probabilities = torch.stack([torch.softmax(model(x), 1)[0] for model in self.models]).mean(0)
-        index = int(probabilities.argmax())
-        return {"label": CLASSES[index], "confidence": round(float(probabilities[index]) * 100, 2),
-                "probabilities": [{"label": name, "probability": round(float(probabilities[i]) * 100, 2)} for i, name in enumerate(CLASSES)]}
+
+        logits = self.models[0](x)
+
+        print("Logits:", logits)
+        print("Finite logits:", torch.isfinite(logits).all().item())
+
+        probs = torch.softmax(logits, dim=1)
+
+        print("Probabilities:", probs)
+        print("Finite probs:", torch.isfinite(probs).all().item())
+
+        if not torch.isfinite(probs).all():
+            raise RuntimeError("Model produced NaN/Inf probabilities.")
+
+        index = int(probs.argmax())
+
+        return {
+            "label": CLASSES[index],
+            "confidence": round(float(probs[0, index]) * 100, 2),
+            "probabilities": [
+                {
+                    "label": CLASSES[i],
+                    "probability": round(float(probs[0, i]) * 100, 2),
+                }
+                for i in range(len(CLASSES))
+            ],
+        }
