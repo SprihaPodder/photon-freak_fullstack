@@ -148,7 +148,7 @@ function ExplanationText({ text }: { text: string }) {
   );
 }
 
-export default function BatteryHealthGrid({ apiBaseUrl = "http://localhost:8000" }: { apiBaseUrl?: string }) {
+export default function BatteryHealthGrid({apiBaseUrl = "https://photonfreak-backend-211670430300.us-central1.run.app",}: {apiBaseUrl?: string}) {
   const [file, setFile] = useState<File | null>(null);
   const [batteryId, setBatteryId] = useState("");
   const [loading, setLoading] = useState(false);
